@@ -1,0 +1,4 @@
+[Project]
+Name=linuxCamJpeg
+Manager=KDevCMakeManager
+VersionControl=kdevgit
