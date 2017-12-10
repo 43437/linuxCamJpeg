@@ -41,9 +41,14 @@ int captureOneFrame(){
   int dst_bufsize;
   
   int src_w;
-  int src_h;
+  int src_h;/*
   int dst_w = 1280;
-  int dst_h = 720;
+  int dst_h = 720;*/
+  
+  int dst_w = 640;
+  int dst_h = 360;
+  
+  av_log_set_level(AV_LOG_DEBUG);
   
   inputFmt = av_find_input_format(input_name);
   if (inputFmt == NULL){
@@ -51,12 +56,16 @@ int captureOneFrame(){
     return -1;
   }
   
-  if (avformat_open_input(&fmtCtx, file_name, inputFmt, NULL)<0){
+  const char *videosize1 = "640x360";
+  AVDictionary *option;
+  av_dict_set(&option, "video_size", videosize1, 0);
+  
+  if (avformat_open_input(&fmtCtx, file_name, inputFmt, &option)<0){
     std::cout<<"can not open input file."<<std::endl;
     return -1;
   }
   
-  av_dump_format(fmtCtx, 0, NULL, 0);
+//   av_dump_format(fmtCtx, 0, NULL, 0);
   
   videoindex = -1;
   for (i=0;i<fmtCtx->nb_streams;i++){
@@ -139,8 +148,8 @@ int captureOneFrame(){
   pAVCodecCtx->codec_id = pOutFormat->video_codec;
   pAVCodecCtx->codec_type = AVMEDIA_TYPE_VIDEO;
   pAVCodecCtx->pix_fmt = dst_pix_fmt;
-  pAVCodecCtx->width = 1280;
-  pAVCodecCtx->height = 720;
+  pAVCodecCtx->width = dst_w;
+  pAVCodecCtx->height = dst_h;
   pAVCodecCtx->time_base.num =1;
   pAVCodecCtx->time_base.den = 25;
   
@@ -168,7 +177,7 @@ int captureOneFrame(){
     std::cout<<"out frame alloc failed, now return. "<<std::endl;
     return -1;
   }
-  uint8_t *pFrame_buf = (uint8_t *)av_malloc(10 * size);
+  uint8_t *pFrame_buf = (uint8_t *)av_malloc(size);
   
   if (!pFrame_buf){
     std::cout<<"frame buf alloc failed. "<<std::endl;
