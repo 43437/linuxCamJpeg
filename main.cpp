@@ -154,7 +154,7 @@ int captureOneFrame(){
   pAVCodecCtx->time_base.den = 25;
   
   std::cout<<" out ";
-  av_dump_format(pFormatCtx, 0, out_file, 1);
+//   av_dump_format(pFormatCtx, 0, out_file, 1);
   
   std::cout<<"out codec id "<<pAVCodecCtx->codec_id<<std::endl;
   
